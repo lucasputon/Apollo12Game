@@ -1,4 +1,5 @@
 import sys
+import math
 import pygame
 import random
 from recursos.funcoes import inicializarBancoDeDados, limpar_tela, escreverDados
@@ -26,12 +27,19 @@ preto = (0, 0, 0)
 fundo = pygame.image.load("bases/background.jpg")
 fundoDead = pygame.image.load("bases/backgroundDead.jpg")
 fundoStart = pygame.image.load("bases/backgroundStart.jpg")
+soloLunar = pygame.image.load("bases/soloLunar.png").convert_alpha()
 
 astronauta = pygame.image.load("bases/astronauta.png")
 astronauta = pygame.transform.scale(astronauta, (59, 110))
 asteroide = pygame.image.load("bases/asteroide.png")
 asteroide = pygame.transform.scale(asteroide, (98,72))
+ovni = pygame.image.load("bases/ovni.png").convert_alpha()
+ovni = pygame.transform.smoothscale(ovni, (78, 58))
+tamanho_base_terra = round(int(tamanho[1] * 0.14) * 1.20) * 3
+terra_base = pygame.image.load("bases/terra.png").convert_alpha()
+terra_base = pygame.transform.smoothscale(terra_base, (tamanho_base_terra, tamanho_base_terra))
 asteroideSound = pygame.mixer.Sound("bases/asteroideSound.mp3")
+ovniSound = pygame.mixer.Sound("bases/ovniSound.mp3")
 explosaoSound = pygame.mixer.Sound("bases/impacto.mp3")
 pygame.mixer.music.load("bases/spaceSound.mp3")
 fonteMenu = pygame.font.Font("bases/HomeVideo-Regular.otf", 18)
@@ -62,6 +70,20 @@ def jogar():
     pontos = 0
     dificuldade = 20
     pausado = False
+    angulo_terra = 0.0
+    fase_pulso = 0.0
+    centro_terra = (tamanho[0] // 2, 455)
+
+    largura_ovni = 78
+    intervalo_ovni_frames = 15 * 60
+    duracao_ovni_frames = 7 * 60
+    velocidade_ovni = (tamanho[0] + largura_ovni) / duracao_ovni_frames
+    ovni_ativo = False
+    contador_intervalo_ovni = 0
+    frames_ovni = 0
+    ovni_x = 0.0
+    ovni_y_base = 0
+    ovni_direcao = 1
 
     def gerar_onda_asteroides():
         """Gera de 1 a 2 asteroides em posições Y distintas e com atraso mínimo no eixo X."""
@@ -92,8 +114,10 @@ def jogar():
                 pausado = not pausado
                 if pausado:
                     pygame.mixer.music.pause()
+                    pygame.mixer.pause()
                 else:
                     pygame.mixer.music.unpause()
+                    pygame.mixer.unpause()
 
         if not pausado:
             teclas = pygame.key.get_pressed()
@@ -136,9 +160,41 @@ def jogar():
             elif fundoMov2 <= -1000:
                 fundoMov2 = 1000
 
+            angulo_terra = (angulo_terra - 0.2) % 360
+            fase_pulso += 0.025
+
+            if not ovni_ativo:
+                contador_intervalo_ovni += 1
+                if contador_intervalo_ovni >= intervalo_ovni_frames:
+                    ovni_ativo = True
+                    frames_ovni = 0
+                    ovni_y_base = random.randint(60, 210)
+                    ovni_direcao = random.choice((-1, 1))
+                    ovni_x = float(-largura_ovni if ovni_direcao == 1 else tamanho[0])
+                    pygame.mixer.Sound.play(ovniSound)
+            else:
+                ovni_x += velocidade_ovni * ovni_direcao
+                frames_ovni += 1
+                if frames_ovni >= duracao_ovni_frames:
+                    ovni_ativo = False
+                    ovniSound.stop()
+                    contador_intervalo_ovni = 0
+
         tela.fill(branco)
         tela.blit(fundo, (fundoMov1, 0))
         tela.blit(fundo, (fundoMov2, 0))
+
+        escala_pulso = 1.0 + 0.04 * math.sin(fase_pulso)
+        terra_animada = pygame.transform.rotozoom(terra_base, angulo_terra, escala_pulso)
+        rect_terra = terra_animada.get_rect(center=centro_terra)
+        tela.blit(terra_animada, rect_terra)
+
+        tela.blit(soloLunar, (fundoMov1, 0))
+        tela.blit(soloLunar, (fundoMov2, 0))
+
+        if ovni_ativo:
+            ovni_y = ovni_y_base + int(8 * math.sin(frames_ovni * 0.08))
+            tela.blit(ovni, (int(ovni_x), ovni_y))
 
         tela.blit(astronauta, (posicaoXPersona, posicaoYPersona))
         for ast in asteroides:
@@ -163,6 +219,7 @@ def jogar():
                 pixelsAsteroideY = set(range(int(ast["y"]), int(ast["y"]) + altura_asteroide))
                 if len(pixelsAsteroideY.intersection(pixelsPersonaY)) > dificuldade:
                     if len(pixelsAsteroideX.intersection(pixelsPersonaX)) > dificuldade:
+                        ovniSound.stop()
                         escreverDados(nome, pontos)
                         dead(tela, relogio, tamanho, fonteMenu, fundoDead, explosaoSound, jogar, iniciar_jogo)
 
