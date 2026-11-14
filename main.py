@@ -14,41 +14,41 @@ while True:
     else:
         print("Nome Inválido!")
         
-tamanho = (800,200)
-pygame.display.set_caption("Iron Man de Pensamento Computacional")
-icone  = pygame.image.load("assets/icone.png")
+tamanho = (1000,700)
+pygame.display.set_caption("Apollo12 - Pensamento Computacional")
+icone  = pygame.image.load("bases/icone.png")
 pygame.display.set_icon(icone)
 relogio = pygame.time.Clock()
 tela = pygame.display.set_mode( tamanho ) 
 branco = (255, 255, 255)
 preto = (0, 0, 0)
 
-fundo = pygame.image.load("assets/background.jpg")
-fundoDead = pygame.image.load("assets/backgroundDead.jpg")
-fundoStart = pygame.image.load("assets/backgroundStart.jpg")
+fundo = pygame.image.load("bases/background.jpg")
+fundoDead = pygame.image.load("bases/backgroundDead.jpg")
+fundoStart = pygame.image.load("bases/backgroundStart.jpg")
 
-iron = pygame.image.load("assets/IronMan.png")
-iron = pygame.transform.scale(iron, (116,51))
-missel = pygame.image.load("assets/missile.png")
-missel = pygame.transform.scale(missel, (125,25))
-missileSound = pygame.mixer.Sound("assets/missile.wav")
-explosaoSound = pygame.mixer.Sound("assets/explosao.wav")
-pygame.mixer.music.load("assets/ironsound.mp3")
+astronauta = pygame.image.load("bases/astronauta.png")
+astronauta = pygame.transform.scale(astronauta, (66,122))
+asteroide = pygame.image.load("bases/asteroide.png")
+asteroide = pygame.transform.scale(asteroide, (98,72))
+asteroideSound = pygame.mixer.Sound("bases/asteroideSound.mp3")
+explosaoSound = pygame.mixer.Sound("bases/impacto.mp3")
+pygame.mixer.music.load("bases/spaceSound.mp3")
 fonteMenu = pygame.font.SysFont("comicsans",18)
 
 def jogar():
     fundoMov1 = 0
-    fundoMov2 = 1129
+    fundoMov2 = 1000
     posicaoXPersona = 0
     posicaoYPersona = 60
     movimentoXPersona  = 0
     movimentoYPersona  = 0
     velocidadeMovPersona = 5
-    posicaoXMissel = 800
-    posicaoYMissel = 100
-    velocidadeMissel = 2
+    posicaoXAsteroide = 800
+    posicaoYAsteroide = 100
+    velocidadeAsteroide = 2
     pontos = 0
-    pygame.mixer.Sound.play(missileSound)
+    pygame.mixer.Sound.play(asteroideSound)
     pygame.mixer.music.play(-1)
     dificuldade = 20
     while True:
@@ -86,36 +86,36 @@ def jogar():
             posicaoYPersona = 150
             
             
-        posicaoXMissel = posicaoXMissel - velocidadeMissel
-        if posicaoXMissel < -125:
-            pygame.mixer.Sound.play(missileSound)
-            posicaoXMissel = 800
+        posicaoXAsteroide = posicaoXAsteroide - velocidadeAsteroide
+        if posicaoXAsteroide < -125:
+            pygame.mixer.Sound.play(asteroideSound)
+            posicaoXAsteroide = 800
             pontos = pontos + 1
-            velocidadeMissel = velocidadeMissel + 1
-            posicaoYMissel = random.randint(0,200)
+            velocidadeAsteroide = velocidadeAsteroide + 1
+            posicaoYAsteroide = random.randint(0,200)
                             
         tela.fill(branco)
         tela.blit(fundo, (fundoMov1,0) )
         tela.blit(fundo, (fundoMov2,0) )
         fundoMov1 -= 1
         fundoMov2 -= 1
-        if fundoMov1 <= -1129:
-            fundoMov1 = 1129
-        elif fundoMov2 <= -1129:
-            fundoMov2 = 1129
+        if fundoMov1 <= -1000:
+            fundoMov1 = 1000
+        elif fundoMov2 <= -1000:
+            fundoMov2 = 1000
+
         
-        
-        tela.blit(iron, (posicaoXPersona,posicaoYPersona))
-        tela.blit( missel, (posicaoXMissel, posicaoYMissel) )
+        tela.blit(astronauta, (posicaoXPersona,posicaoYPersona))
+        tela.blit( asteroide, (posicaoXAsteroide, posicaoYAsteroide) )
         texto = fonteMenu.render("Pontos: "+str(pontos), True, branco)
         tela.blit(texto, (700,15))
             
-        pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona+116))
-        pixelsPersonaY = list(range(posicaoYPersona, posicaoYPersona+51))
-        pixelsMisselX = list(range(posicaoXMissel, posicaoXMissel + 125))
-        pixelsMisselY = list(range(posicaoYMissel, posicaoYMissel + 25))
-        if  len( list( set(pixelsMisselY).intersection(set(pixelsPersonaY))) ) > dificuldade:
-            if len( list( set(pixelsMisselX).intersection(set(pixelsPersonaX))   ) )  > dificuldade:
+        pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona+66))
+        pixelsPersonaY = list(range(posicaoYPersona, posicaoYPersona+122))
+        pixelsAsteroideX = list(range(posicaoXAsteroide, posicaoXAsteroide + 218))
+        pixelsAsteroideY = list(range(posicaoYAsteroide, posicaoYAsteroide + 182))
+        if  len( list( set(pixelsAsteroideY).intersection(set(pixelsPersonaY))) ) > dificuldade:
+            if len( list( set(pixelsAsteroideX).intersection(set(pixelsPersonaX))   ) )  > dificuldade:
                 escreverDados(nome, pontos)
                 dead()
                 
