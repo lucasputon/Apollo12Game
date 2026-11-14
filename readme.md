@@ -17,3 +17,16 @@ pygame-ce - ver. 2.5.8
 
 cx_Freeze - ver. 8.7.4  
 
+
+## Recursos Utilizados  
+
+Gemini 4 Argon - Formatação de Código  
+
+Gemini 4 Hydrogen - Formatação de Código  
+
+Gemini 3.1 Pro - Geração de Artes Gráficas  
+
+Pixabay - Efeitos Sonoros  
+
+
+
