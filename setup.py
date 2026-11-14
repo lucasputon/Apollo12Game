@@ -3,15 +3,15 @@ import cx_Freeze
 executaveis = [ 
                cx_Freeze.Executable(
                    script="main.py", 
-                   icon="recursos/icone.ico",
+                   icon="bases/icone.ico",
                     target_name="Apollo12Game.exe"
                    ) ]
 cx_Freeze.setup(
     name = "Apollo12Game",
     options={
         "build_exe":{
-            "packages":["pygame"],
-            "include_files":["assets","recursos"]
+            "packages":["pygame", "pyttsx3"],
+            "include_files":["bases","recursos"]
         }
     }, executables = executaveis
 )

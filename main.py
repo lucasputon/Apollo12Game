@@ -1,18 +1,18 @@
+import sys
 import pygame
 import random
-from recursos.funcoes import inicializarBancoDeDados, limpar_tela, escreverDados, maior_pontuador
+from recursos.funcoes import inicializarBancoDeDados, limpar_tela, escreverDados
+from recursos.trabalho import (
+    desenhar_texto_centralizado,
+    formatar_maior_pontuador,
+    pedir_nome,
+    como_jogar,
+    dead,
+)
 
 limpar_tela()
 inicializarBancoDeDados()
-nome_maior, maior_pontos, dataJogada = maior_pontuador()
 pygame.init()
-
-while True:
-    nome = input("Nickname: ")
-    if len(nome) > 0: 
-        break
-    else:
-        print("Nome Inválido!")
         
 tamanho = (1000,700)
 pygame.display.set_caption("Apollo12 - Pensamento Computacional")
@@ -34,7 +34,9 @@ asteroide = pygame.transform.scale(asteroide, (98,72))
 asteroideSound = pygame.mixer.Sound("bases/asteroideSound.mp3")
 explosaoSound = pygame.mixer.Sound("bases/impacto.mp3")
 pygame.mixer.music.load("bases/spaceSound.mp3")
-fonteMenu = pygame.font.SysFont("comicsans",18)
+fonteMenu = pygame.font.Font("bases/HomeVideo-Regular.otf", 18)
+fonteTitulo = pygame.font.Font("bases/HomeVideo-Regular.otf", 26)
+nome = ""
 
 def jogar():
     fundoMov1 = 0
@@ -107,8 +109,7 @@ def jogar():
         
         tela.blit(astronauta, (posicaoXPersona,posicaoYPersona))
         tela.blit( asteroide, (posicaoXAsteroide, posicaoYAsteroide) )
-        texto = fonteMenu.render("Pontos: "+str(pontos), True, branco)
-        tela.blit(texto, (700,15))
+        desenhar_texto_centralizado(tela, f"Pontos: {pontos}", fonteMenu, branco, tamanho[0] // 2, 650, sombra=True)
             
         pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona+66))
         pixelsPersonaY = list(range(posicaoYPersona, posicaoYPersona+122))
@@ -117,111 +118,60 @@ def jogar():
         if  len( list( set(pixelsAsteroideY).intersection(set(pixelsPersonaY))) ) > dificuldade:
             if len( list( set(pixelsAsteroideX).intersection(set(pixelsPersonaX))   ) )  > dificuldade:
                 escreverDados(nome, pontos)
-                dead()
-                
-            else:
-                print("Ainda Vivo, mas por pouco!")
-        else:
-            print("Ainda Vivo")
+                dead(tela, relogio, tamanho, fonteMenu, fundoDead, explosaoSound, jogar, iniciar_jogo)
         
         
         pygame.display.update()
         relogio.tick(60)
-
-def dead():
-    pygame.mixer.music.stop()
-    pygame.mixer.Sound.play(explosaoSound)
-    larguraButtonStart = 150
-    alturaButtonStart  = 40
-    larguraButtonQuit = 150
-    alturaButtonQuit  = 40
-    while True:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                quit()
-            elif evento.type == pygame.MOUSEBUTTONDOWN:
-                if startButton.collidepoint(evento.pos):
-                    larguraButtonStart = 140
-                    alturaButtonStart  = 35
-                if quitButton.collidepoint(evento.pos):
-                    larguraButtonQuit = 140
-                    alturaButtonQuit  = 35
-
-                
-            elif evento.type == pygame.MOUSEBUTTONUP:
-                # Verifica se o clique foi dentro do retângulo
-                if startButton.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
-                    larguraButtonStart = 150
-                    alturaButtonStart  = 40
-                    jogar()
-                if quitButton.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
-                    larguraButtonQuit = 150
-                    alturaButtonQuit  = 40
-                    quit()
-            
-        tela.fill(branco)
-        tela.blit(fundoDead, (0,0))
-        startButton = pygame.draw.rect(tela, branco, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
-        startTexto = fonteMenu.render("Iniciar Game", True, preto)
-        tela.blit(startTexto, (25,12))
-        
-        quitButton = pygame.draw.rect(tela, branco, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
-        quitTexto = fonteMenu.render("Sair do Game", True, preto)
-        tela.blit(quitTexto, (25,62))
-
-
-        pygame.display.update()
-        relogio.tick(60)
-
-
 
 def start():
-    larguraButtonStart = 150
-    alturaButtonStart  = 40
-    larguraButtonQuit = 150
-    alturaButtonQuit  = 40
+    """Exibe a primeira tela do jogo com o nome do jogador, botão Jogar e o maior pontuador."""
+    texto_recorde = formatar_maior_pontuador()
+    largura_button_start = 180
+    altura_button_start = 48
+    centro_x = tamanho[0] // 2
+    centro_y_botao = 380
+
     while True:
+        start_button = pygame.Rect(0, 0, largura_button_start, altura_button_start)
+        start_button.center = (centro_x, centro_y_botao)
+
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
-                quit()
-            elif evento.type == pygame.MOUSEBUTTONDOWN:
-                if startButton.collidepoint(evento.pos):
-                    larguraButtonStart = 140
-                    alturaButtonStart  = 35
-                if quitButton.collidepoint(evento.pos):
-                    larguraButtonQuit = 140
-                    alturaButtonQuit  = 35
-
-                
-            elif evento.type == pygame.MOUSEBUTTONUP:
-                # Verifica se o clique foi dentro do retângulo
-                if startButton.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
-                    larguraButtonStart = 150
-                    alturaButtonStart  = 40
+                pygame.quit()
+                sys.exit()
+            elif evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+                if start_button.collidepoint(evento.pos):
+                    largura_button_start = 170
+                    altura_button_start = 44
+            elif evento.type == pygame.MOUSEBUTTONUP and evento.button == 1:
+                largura_button_start = 180
+                altura_button_start = 48
+                if start_button.collidepoint(evento.pos):
                     jogar()
-                if quitButton.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
-                    larguraButtonQuit = 150
-                    alturaButtonQuit  = 40
-                    quit()
-            
+
         tela.fill(branco)
-        tela.blit(fundoStart, (0,0))
-        startButton = pygame.draw.rect(tela, branco, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
-        startTexto = fonteMenu.render("Iniciar Game", True, preto)
-        tela.blit(startTexto, (25,12))
-        
-        quitButton = pygame.draw.rect(tela, branco, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
-        quitTexto = fonteMenu.render("Sair do Game", True, preto)
-        tela.blit(quitTexto, (25,62))
-        texto = fonteMenu.render(f"The Best - {nome_maior} - {maior_pontos} - { dataJogada} ", True, branco)
-        tela.blit(texto, (480,15))
-        
+        tela.blit(fundoStart, (0, 0))
+
+        desenhar_texto_centralizado(tela, f"Nome Jogador - {nome}", fonteTitulo, branco, centro_x, centro_y_botao - 60, sombra=True)
+
+        start_button = pygame.Rect(0, 0, largura_button_start, altura_button_start)
+        start_button.center = (centro_x, centro_y_botao)
+        pygame.draw.rect(tela, branco, start_button, border_radius=15)
+        desenhar_texto_centralizado(tela, "Jogar", fonteMenu, preto, start_button.centerx, start_button.centery)
+
+        desenhar_texto_centralizado(tela, texto_recorde, fonteMenu, branco, centro_x, 650, sombra=True)
 
         pygame.display.update()
         relogio.tick(60)
-           
-start()
+
+
+def iniciar_jogo():
+    """Executa o fluxo inicial completo: pedir nome, tela de instruções e tela inicial."""
+    global nome
+    nome = pedir_nome(tela, relogio, tamanho, fonteMenu, fonteTitulo)
+    como_jogar(tela, relogio, tamanho, fonteMenu, fonteTitulo, nome)
+    start()
+
+
+iniciar_jogo()

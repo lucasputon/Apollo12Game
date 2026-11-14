@@ -26,12 +26,15 @@ def escreverDados(nome, pontos):
     else:
         dadosDict = {}
         
-    data_br = datetime.now().strftime("%d/%m/%Y")
-    dadosDict[nome] = (pontos, data_br)
-    
-    banco = open("log.dat","w")
-    banco.write(json.dumps(dadosDict))
-    banco.close()
+    if nome not in dadosDict or pontos >= dadosDict[nome][0]:
+        agora = datetime.now()
+        data_br = agora.strftime("%d/%m/%Y")
+        hora_br = agora.strftime("%H:%M:%S")
+        dadosDict[nome] = (pontos, data_br, hora_br)
+
+        banco = open("log.dat","w")
+        banco.write(json.dumps(dadosDict))
+        banco.close()
     
     # END - inserindo no arquivo
     
@@ -45,7 +48,8 @@ def maior_pontuador():
         dadosDict = {}
 
     nome_maior = None
-    dataJogada =  None
+    dataJogada = None
+    horaJogada = None
     maior_pontos = -1
 
     for nome, info in dadosDict.items():
@@ -55,6 +59,7 @@ def maior_pontuador():
         if pontos > maior_pontos:
             maior_pontos = pontos
             nome_maior = nome
-            dataJogada = info[1]            
+            dataJogada = info[1]
+            horaJogada = info[2] if len(info) > 2 else ""
 
-    return nome_maior, maior_pontos, dataJogada
+    return nome_maior, maior_pontos, dataJogada, horaJogada
