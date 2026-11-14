@@ -47,7 +47,7 @@ fonteTitulo = pygame.font.Font("bases/HomeVideo-Regular.otf", 26)
 nome = ""
 
 def jogar():
-    """Executa o loop principal da partida com propulsor, gravidade lenta e ondas de 1 a 2 asteroides."""
+    # Executa o loop principal da partida com propulsor, gravidade lenta e ondas de 1 a 2 asteroides.
     fundoMov1 = 0
     fundoMov2 = 1000
     largura_persona, altura_persona = 59, 110
@@ -86,7 +86,7 @@ def jogar():
     ovni_direcao = 1
 
     def gerar_onda_asteroides():
-        """Gera de 1 a 2 asteroides em posições Y distintas e com atraso mínimo no eixo X."""
+        # Gera de 1 a 2 asteroides em posições Y distintas e com atraso mínimo no eixo X.
         quantidade = random.randint(1, 2)
         y1 = random.randint(min_y_asteroide, max_y_asteroide)
         onda = [{"x": tamanho[0], "y": y1, "som_tocado": False}]
@@ -227,7 +227,7 @@ def jogar():
         relogio.tick(60)
 
 def start():
-    """Exibe a primeira tela do jogo com o nome do jogador, botão Jogar e o maior pontuador."""
+    # Exibe a primeira tela do jogo com o nome do jogador, botão Jogar e o maior pontuador.
     texto_recorde = formatar_maior_pontuador()
     largura_button_start = 180
     altura_button_start = 48
@@ -269,7 +269,7 @@ def start():
 
 
 def iniciar_jogo():
-    """Executa o fluxo inicial completo: pedir nome, tela de instruções e tela inicial."""
+    # Executa o fluxo inicial completo: pedir nome, tela de instruções e tela inicial.
     global nome
     nome = pedir_nome(tela, relogio, tamanho, fonteMenu, fonteTitulo)
     como_jogar(tela, relogio, tamanho, fonteMenu, fonteTitulo, nome)

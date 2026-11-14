@@ -10,7 +10,7 @@ VERMELHO = (255, 80, 80)
 
 
 def desenhar_texto_centralizado(tela, texto, fonte, cor, centro_x, centro_y, sombra=False):
-    """Renderiza e centraliza um texto na tela na posição informada."""
+    # Renderiza e centraliza um texto na tela na posição informada.
     if sombra:
         superficie_sombra = fonte.render(texto, True, PRETO)
         rect_sombra = superficie_sombra.get_rect(center=(centro_x + 2, centro_y + 2))
@@ -22,7 +22,7 @@ def desenhar_texto_centralizado(tela, texto, fonte, cor, centro_x, centro_y, som
 
 
 def formatar_maior_pontuador():
-    """Retorna o texto formatado do maior pontuador com pontos, data e hora."""
+    # Retorna o texto formatado do maior pontuador com pontos, data e hora.
     nome_maior, maior_pontos, dataJogada, horaJogada = maior_pontuador()
     if nome_maior is None:
         return "Nenhum recorde registrado ainda"
@@ -32,7 +32,7 @@ def formatar_maior_pontuador():
 
 
 def quebrar_texto_em_linhas(texto, fonte, largura_max):
-    """Quebra o texto em linhas respeitando parágrafos e a largura máxima em pixels."""
+    # Quebra o texto em linhas respeitando parágrafos e a largura máxima em pixels.
     linhas = []
     for paragrafo in texto.splitlines():
         palavras = paragrafo.split()
@@ -53,7 +53,7 @@ def quebrar_texto_em_linhas(texto, fonte, largura_max):
 
 
 def falar_boas_vindas(nome_jogador):
-    """Fala a mensagem de boas-vindas em PT-BR em uma thread separada."""
+    # Fala a mensagem de boas-vindas em PT-BR em uma thread separada.
     mensagem = f"Seja bem-vindo Astronauta {nome_jogador} a Apollo 12"
 
     def _executar_fala():
@@ -81,7 +81,7 @@ def falar_boas_vindas(nome_jogador):
 
 
 def pedir_nome(tela, relogio, tamanho, fonteMenu, fonteTitulo):
-    """Exibe uma tela preta centralizada para o jogador digitar seu nome e confirmar em OK."""
+    # Exibe uma tela preta centralizada para o jogador digitar seu nome e confirmar em OK.
     texto_digitado = ""
     erro = False
     largura_button_ok = 120
@@ -144,7 +144,7 @@ def pedir_nome(tela, relogio, tamanho, fonteMenu, fonteTitulo):
 
 
 def como_jogar(tela, relogio, tamanho, fonteMenu, fonteTitulo, nome):
-    """Exibe tela preta com boas-vindas em PT-BR, resumo de bases/comoJogar.txt e botão Entendi."""
+    # Exibe tela preta com boas-vindas em PT-BR, resumo de bases/comoJogar.txt e botão Entendi.
     with open("bases/comoJogar.txt", "r", encoding="utf-8") as arquivo:
         conteudo = arquivo.read().strip()
 
@@ -201,7 +201,7 @@ def como_jogar(tela, relogio, tamanho, fonteMenu, fonteTitulo, nome):
 
 
 def dead(tela, relogio, tamanho, fonteMenu, fundoDead, explosaoSound, acao_jogar_novamente, acao_reiniciar):
-    """Exibe a tela de fim de jogo com o recorde e opções de Jogar Novamente ou Reiniciar Jogo."""
+    # Exibe a tela de fim de jogo com o recorde e opções de Jogar Novamente ou Reiniciar Jogo.
     pygame.mixer.music.stop()
     pygame.mixer.Sound.play(explosaoSound)
     texto_recorde = formatar_maior_pontuador()
