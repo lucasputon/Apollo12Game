@@ -1,0 +1,4 @@
+Voce e um astronauta que embarcou na segunda ida historica a lua, Apollo 12! Ao aterrissar, voce se depara com varios asteroides vindo EM SUA DIRECAO! Agora voce deve desviar deles utilizando sua mochila propulsora para PERMANECER VIVO. 
+
+Obs.:
+Para acionar o propulsor da sua mochila, pressione a tecla [Seta para Cima] e [Seta para Baixo] no seu teclado.

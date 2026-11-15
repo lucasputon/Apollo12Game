@@ -5,6 +5,11 @@ Feito Bruno Hoffelder Colussi & Lucas Puton
 RAs: 1140207 & 1140139
 
 
+## Descrição do Jogo
+
+Voce e um astronauta que embarcou na segunda ida historica a lua, Apollo 12! Ao aterrissar, voce se depara com varios asteroides vindo EM SUA DIRECAO! Agora voce deve desviar deles utilizando sua mochila propulsora para PERMANECER VIVO. 
+
+
 ## Tecnologias Utilizadas
 
 Visual Code - ver. 1.146.0 (Windows x64)  

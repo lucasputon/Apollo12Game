@@ -1,11 +1,12 @@
 # pip install cx_freeze
 import cx_Freeze
-executaveis = [ 
+executaveis = [
                cx_Freeze.Executable(
-                   script="main.py", 
+                   script="main.py",
+                   base="gui",
                    icon="bases/icone.ico",
-                    target_name="Apollo12Game.exe"
-                   ) ]
+                   target_name="Apollo12Game.exe"
+               ) ]
 cx_Freeze.setup(
     name = "Apollo12Game",
     options={

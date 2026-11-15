@@ -1,0 +1,5 @@
+setup.py
+Apollo12Game.egg-info/PKG-INFO
+Apollo12Game.egg-info/SOURCES.txt
+Apollo12Game.egg-info/dependency_links.txt
+Apollo12Game.egg-info/top_level.txt
