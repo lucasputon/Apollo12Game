@@ -31,6 +31,8 @@ soloLunar = pygame.image.load("bases/soloLunar.png").convert_alpha()
 
 astronauta = pygame.image.load("bases/astronauta.png")
 astronauta = pygame.transform.scale(astronauta, (59, 110))
+fumaca = pygame.image.load("bases/fumacaBoneco.png").convert_alpha()
+fumaca = pygame.transform.smoothscale(fumaca, (42, 68))
 asteroide = pygame.image.load("bases/asteroide.png")
 asteroide = pygame.transform.scale(asteroide, (98,72))
 ovni = pygame.image.load("bases/ovni.png").convert_alpha()
@@ -40,6 +42,7 @@ terra_base = pygame.image.load("bases/terra.png").convert_alpha()
 terra_base = pygame.transform.smoothscale(terra_base, (tamanho_base_terra, tamanho_base_terra))
 asteroideSound = pygame.mixer.Sound("bases/asteroideSound.mp3")
 ovniSound = pygame.mixer.Sound("bases/ovniSound.mp3")
+propulsorSound = pygame.mixer.Sound("bases/propulsorSound.mp3")
 explosaoSound = pygame.mixer.Sound("bases/impacto.mp3")
 pygame.mixer.music.load("bases/spaceSound.mp3")
 fonteMenu = pygame.font.Font("bases/HomeVideo-Regular.otf", 18)
@@ -70,6 +73,8 @@ def jogar():
     pontos = 0
     dificuldade = 20
     pausado = False
+    usando_propulsor = False
+    propulsor_tocando = False
     angulo_terra = 0.0
     fase_pulso = 0.0
     centro_terra = (tamanho[0] // 2, 455)
@@ -113,6 +118,9 @@ def jogar():
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_SPACE:
                 pausado = not pausado
                 if pausado:
+                    propulsorSound.stop()
+                    propulsor_tocando = False
+                    usando_propulsor = False
                     pygame.mixer.music.pause()
                     pygame.mixer.pause()
                 else:
@@ -124,10 +132,19 @@ def jogar():
 
             if teclas[pygame.K_UP]:
                 movimentoYPersona = -velocidadeSubida
-            elif teclas[pygame.K_DOWN]:
-                movimentoYPersona = velocidadeDescidaRapida
+                usando_propulsor = True
+                if not propulsor_tocando:
+                    propulsorSound.play(-1)
+                    propulsor_tocando = True
             else:
-                movimentoYPersona = velocidadeQuedaLenta
+                usando_propulsor = False
+                if propulsor_tocando:
+                    propulsorSound.stop()
+                    propulsor_tocando = False
+                if teclas[pygame.K_DOWN]:
+                    movimentoYPersona = velocidadeDescidaRapida
+                else:
+                    movimentoYPersona = velocidadeQuedaLenta
 
             posicaoYPersona += movimentoYPersona
 
@@ -196,6 +213,8 @@ def jogar():
             ovni_y = ovni_y_base + int(8 * math.sin(frames_ovni * 0.08))
             tela.blit(ovni, (int(ovni_x), ovni_y))
 
+        if usando_propulsor:
+            tela.blit(fumaca, (posicaoXPersona - 10, posicaoYPersona + altura_persona // 2))
         tela.blit(astronauta, (posicaoXPersona, posicaoYPersona))
         for ast in asteroides:
             tela.blit(asteroide, (ast["x"], ast["y"]))
@@ -219,6 +238,7 @@ def jogar():
                 pixelsAsteroideY = set(range(int(ast["y"]), int(ast["y"]) + altura_asteroide))
                 if len(pixelsAsteroideY.intersection(pixelsPersonaY)) > dificuldade:
                     if len(pixelsAsteroideX.intersection(pixelsPersonaX)) > dificuldade:
+                        propulsorSound.stop()
                         ovniSound.stop()
                         escreverDados(nome, pontos)
                         dead(tela, relogio, tamanho, fonteMenu, fundoDead, explosaoSound, jogar, iniciar_jogo)
