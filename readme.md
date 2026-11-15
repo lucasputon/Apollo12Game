@@ -1,13 +1,15 @@
 ## Código Criado na Disciplina de Pensamento Computacional
 
-Feito Bruno Hoffelder Colussi & Lucas Puton
+Desenvolvedores - Bruno Hoffelder Colussi & Lucas Puton  
 
-RAs: 1140207 & 1140139
+Instrutor do Projeto - Marcos Roberto dos Santos  
+
+RAs - 1140207 & 1140139  
 
 
 ## Descrição do Jogo
 
-Voce e um astronauta que embarcou na segunda ida historica a lua, Apollo 12! Ao aterrissar, voce se depara com varios asteroides vindo EM SUA DIRECAO! Agora voce deve desviar deles utilizando sua mochila propulsora para PERMANECER VIVO. 
+Você é um astronauta que embarcou na segunda ida histórica à lua, Apollo 12! Ao aterrissar, você se depara com vários asteroides vindo EM SUA DIREÇÃO! Agora você deve desviar deles utilizando sua mochila propulsora para PERMANECER VIVO. 
 
 
 ## Tecnologias Utilizadas
